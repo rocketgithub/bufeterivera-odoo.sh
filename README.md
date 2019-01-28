@@ -1,0 +1,1 @@
+# bufeterivera-odoo.sh
