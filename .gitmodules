@@ -10,3 +10,6 @@
 	path = bolson
 	url = https://github.com/rocketgithub/bolson.git
 	branch = 11.0
+[submodule "bufeterivera"]
+	path = bufeterivera
+	url = git@github.com:rocketgithub/bufeterivera.git
