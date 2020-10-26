@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="invoice_form_gface_ecofacturas">
+            <field name="name">account.invoice.form.gface_ecofacturas</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="comment" position="after">
+                        <group>
+                            <field name="firma_fel"/>
+                            <field name="serie_fel"/>
+                            <field name="numero_fel"/>
+                            <!--<field name="factura_original_id"/>-->
+                            <field name="refund_invoice_id" string="Factura Original"/>
+                        </group>
+                        <group>
+                            <field name="consignatario_fel"/>
+                            <field name="comprador_fel"/>
+                            <field name="exportador_fel"/>
+                            <field name="incoterm_fel"/>
+                        </group>
+                        <group>
+                            <field name="pdf_fel_name" invisible="1"/>
+                            <field name="pdf_fel" readonly="1" filename="pdf_fel_name"/>
+                            <field name="documento_xml_fel_name" invisible="1"/>
+                            <field name="documento_xml_fel" readonly="1" filename="documento_xml_fel_name"/>
+                            <field name="resultado_xml_fel_name" invisible="1"/>
+                            <field name="resultado_xml_fel" readonly="1" filename="resultado_xml_fel_name"/>
+                        </group>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="journal_form_gface_ecofacturas">
+            <field name="name">account.journal.form.gface_ecofacturas</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="currency_id" position="after">
+                        <field name="generar_fel"/>
+                        <field name="codigo_establecimiento_fel"/>
+                        <field name="tipo_documento_fel"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+        
+        <record id="view_company_form_fel_infile" model="ir.ui.view">
+            <field name="name">res.company.form.fel_infile</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <notebook position="inside">
+                        <page string="FEL Ecofactura">
+                            <group string="Ecofactura">
+                                <group>
+                                    <field name="cliente_fel"/>
+                                    <field name="usuario_fel"/>
+                                    <field name="clave_fel"/>
+                                    <field name="pruebas_fel"/>
+                                </group>
+                                <group>
+                                    <field name="trncampad01_fel"/>
+                                    <field name="trncampad02_fel"/>
+                                    <field name="trncampad03_fel"/>
+                                    <field name="trncampad04_fel"/>
+                                    <field name="trncampad05_fel"/>
+                                    <field name="trncampad06_fel"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
