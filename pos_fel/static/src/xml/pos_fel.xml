@@ -15,16 +15,7 @@
                     <br/>
                     <t t-esc="widget.pos.company.name"/><br/>
                     NIT: <t t-esc="widget.pos.company.vat"/><br/>
-                    <t t-if='widget.pos.config.name === "CAJA Majadas" || widget.pos.config.name === "Majadas 1"'>
-                    	Interior Parque Comercial Majadas <br/>
-						Locales 19 y 20 <br/>
-						Tel: 2473-8161
-                    </t>
-                    <t t-if='widget.pos.config.name === "CAJA Escala" || widget.pos.config.name === "Majadas 1"'>
-                    	Km. 14.5 Carretera a El Salvador <br/>
-                    	C.C. ESCALA, Local 27  <br/>
-                    	Tel: 6634-5322 <br/>
-                    </t>
+                    
                     <t t-if="receipt.header">
                         <div style='text-align:center'>
                             <t t-esc="receipt.header" />
@@ -138,25 +129,7 @@
                         </tr>
                     </table>
                     <br/><br/>
-                    <t t-if="!certificador_fel">
-                    	<div class="pos-center-align">
-                        Sujeto a pagos trimestrales ISR<br/>
-                        Certificador: MEGAPRINT, S.A.<br/>
-                        NIT: 50510231<br/>
-                    	</div>
-                    </t>
-                    <t t-if="certificador_fel == 'g4s'">
-                        Sujeto a pagos trimestrales ISR<br/>
-                        Certificador<br/>
-                        G4S DOCUMENTA, S. A.<br/>
-                        NIT: 60010207<br/>
-                    </t>
-                    <t t-if="certificador_fel == 'gom'">
-                        Sujeto a pagos trimestrales ISR<br/>
-                        Certificador<br/>
-                        GOM SOLUTIONS, SOCIEDAD ANONIMA<br/>
-                        NIT: 95189416<br/>
-                    </t>
+                    
                     <div class="pos-center-align">
                     <t t-if="firma_fel">
                     	
