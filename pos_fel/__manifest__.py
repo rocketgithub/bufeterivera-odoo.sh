@@ -10,7 +10,7 @@
     'description': """ Cambios al Punto de Venta para generar facturas electrónicas fácilmente """,
     'website': 'http://aquih.com',
     'author': 'Rodrigo Fernandez',
-    'depends': ['point_of_sale', 'fel_gt'],
+    'depends': ['point_of_sale', 'fel_ecofactura'],
     'data': [
         'views/report.xml',
         'views/pos_order_ticket.xml',
