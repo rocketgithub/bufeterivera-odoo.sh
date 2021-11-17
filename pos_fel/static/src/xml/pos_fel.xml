@@ -1,110 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    
-    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
-        
-        <!-- Por alguna razón, no se imprime del tamañao correcto sin estos css -->
-        <xpath expr="//*[@class='pos-receipt']" position="attributes">
-            <attribute name="style">
-                position: relative; left: 1.2em; font-size: 150%; zoom: 90%;
-            </attribute>
-        </xpath>
-        
-        <!-- Información requerida por la SAT -->
-        <xpath expr="//*[@class='pos-receipt-contact']" position="replace">
-            <div class="pos-receipt-contact">
-                <t t-esc="receipt.company.name"/><br/>
-                NIT: <t t-esc="receipt.company.vat"/><br/>
-                <br/>
-                <t t-if="widget.pos.invoice_journal_address">
-                    <t t-esc="widget.pos.invoice_journal_address.name"/><br/>
-                    <t t-esc="widget.pos.invoice_journal_address.street"/><br/>
-                </t>
-                <br/>
-                <t t-if="firma_fel">
-                    Documento Tributario Electrónico FEL<br/>
-                    Factura Electrónica<br/>
-                    Serie: <t t-esc="serie_fel || ''"/><br/>
-                    Número: <t t-esc="numero_fel || ''"/><br/>
-                </t>
-                <br/>
-                <div class="datos_factura">
-                    Fecha: <t t-esc="receipt.date.localestring"/><br/>
-                    Empleado: <t t-esc="receipt.cashier"/><br/>
-                    <br/>
-                    NIT: <t t-esc="order.get_client().vat ? order.get_client().vat : 'CF'"/><br/>
-                    Nombre: <t t-esc="receipt.client"/><br/>
-                    Dirección: <t t-esc="order.get_client().street"/><br/><br/>
-                </div>
-            </div>
-        </xpath>
-        
-        <!-- Poner el lote en cada linea -->
-        <xpath expr="//*[@class='orderlines']/t/t[3]" position="inside">
-            <div class="pos-receipt-left-padding">
-                <t t-set="orderline" t-value="orderlines[line_index]" />
-                <t t-if="orderline.pack_lot_lines">
-                    <t t-foreach="orderline.pack_lot_lines.models" t-as="lot">
-                        <span t-esc="lot.attributes['lot_name']"/>
-                    </t>
-                </t>
-            </div>
-        </xpath>
-        
-        <!-- Para las facturas que tienen negativos -->
-        <xpath expr="//*[@class='pos-receipt-amount']" position="before">
-            <div>
-                <div>SUBTOTAL: <span t-esc='widget.format_currency(receipt.total_with_tax-precio_total_descuento)' class="pos-receipt-right-align"/></div>
-                <div>DESCUENTO: <span t-esc='widget.format_currency(precio_total_descuento)' class="pos-receipt-right-align"/></div>
-            </div>
-        </xpath>
-        
-        <!-- Información del certificador -->
-        <xpath expr="//*[@class='before-footer']" position="after">
-            <br/>
-            <t t-if="!certificador_fel">
-                Certificador<br/>
-                INFILE, S.A.<br/>
-                NIT: 12521337<br/>
-            </t>
-            <t t-if="certificador_fel == 'g4s'">
-                Certificador<br/>
-                G4S DOCUMENTA, S. A.<br/>
-                NIT: 60010207<br/>
-            </t>
-            <t t-if="certificador_fel == 'gom'">
-                Certificador<br/>
-                GOM SOLUTIONS, SOCIEDAD ANONIMA<br/>
-                NIT: 95189416<br/>
-            </t>
-            <t t-if="certificador_fel == 'ecofactura'">
-                Certificador<br/>
-                ECO-FACTURAS<br/>
-                NIT: 64281167<br/>
-            </t>
-            <t t-if="firma_fel">
-                Autorización: <t t-esc="firma_fel || ''"/><br/>
-                Fecha Certificación: <t t-esc="order.formatted_validation_date"/>
-            </t>
-            <div t-if='!receipt.footer and !receipt.footer_html'>
-                Sujeto a pagos trimestrales ISR<br/>
-            </div>
-        </xpath>
-    </t>
 
-    <!--
-    <t t-extend="OrderReceipt">
-        <t t-jquery=".pos-receipt" t-operation="replace">
-            <div class="pos-receipt" style="font-size: 190%; zoom: 90%; position: relative; left: 1.2em">
+    <t t-extend="PosTicket">
+        <t t-jquery=".pos-sale-ticket" t-operation="replace">
+            <div class="pos-sale-ticket" style="font-size: 190%; zoom: 90%;">
                 <t t-if="firma_fel || order.get_paymentlines().length == 0">
 
-                    <t t-esc="widget.pos.config.name"/><br/>
+
+                    <!--<br/>-->
+                    <center>
+                    <!--<t t-if='receipt.company.logo'>
+                        <img class="pos-receipt-logo" t-att-src='receipt.company.logo' alt="Logo" style='text-align:center'/>
+                    </t>-->
                     <br/>
-                    <t t-if='receipt.company.logo'>
-                        <img class="pos-receipt-logo" t-att-src='receipt.company.logo' alt="Logo"/>
-                    </t>
                     <t t-esc="widget.pos.company.name"/><br/>
                     NIT: <t t-esc="widget.pos.company.vat"/><br/>
+                    <t t-if='widget.pos.config.name === "CAJA Majadas" || widget.pos.config.name === "Majadas 1"'>
+                    	Interior Parque Comercial Majadas <br/>
+						Locales 19 y 20 <br/>
+						Tel: 2473-8161
+                    </t>
+                    <t t-if='widget.pos.config.name === "CAJA Escala" || widget.pos.config.name === "Majadas 1"'>
+                    	Km. 14.5 Carretera a El Salvador <br/>
+                    	C.C. ESCALA, Local 27  <br/>
+                    	Tel: 6634-5322 <br/>
+                    </t>
                     <t t-if="receipt.header">
                         <div style='text-align:center'>
                             <t t-esc="receipt.header" />
@@ -117,11 +37,15 @@
                     </t>
                     <br/>
                     <t t-if="firma_fel">
-                        Documento Tributario Electrónico FEL<br/>
+                    	<br/>
+                    	FACTURA <br/>
+                        Documento Tributario Electrónico <br/>
+			 FEL<br/>
                         Factura Electrónica<br/>
-                        Serie: <t t-esc="serie_fel || ''"/><br/>
-                        Número: <t t-esc="numero_fel || ''"/><br/>
+                        <strong>Serie: </strong><t t-esc="serie_fel || ''"/><br/>
+                        <strong>Número: </strong><t t-esc="numero_fel || ''"/><br/>
                     </t>
+                	</center>
                     <br/>
                     <div class="datos_factura">
                         Fecha: <t t-esc="order.formatted_validation_date"/><br/>
@@ -129,20 +53,28 @@
                         <br/>
                         NIT: <t t-esc="order.get_client().vat ? order.get_client().vat : 'CF'"/><br/>
                         Nombre: <t t-esc="order.get_client().name"/><br/>
-                        Dirección: <t t-esc="order.get_client().street"/><br/><br/>
+                        Dirección: <t t-if="order.get_client().street" t-esc="order.get_client().street"/> <t t-if="order.get_client().street2" t-esc="order.get_client().street2"/> <t t-if="order.get_client().city" t-esc="order.get_client().city"/><br/><br/>
                     </div>
-                    <table class='receipt-orderlines'>
+                    <table style="font-size:14px" class='receipt-orderlines'>
                         <colgroup>
-                            <col width='40%' />
+                           <col width='10%' />
                             <col width='25%' />
-                            <col width='25%' />
+                            <col width='27%' />
                         </colgroup>
+                        <tr style="font-weight:bold;border: 1px solid black">
+                        	<td >Ctd</td>
+                        	<td class="pos-left-align">Descripcion</td>
+                        	<td class="pos-right-align">Precio</td>
+                        </tr>
                         <tr t-foreach="orderlines" t-as="orderline">
-                            <td>
+                        	<td class="pos-center-align">
+                                <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                            </td>
+                            <td class="pos-left-align">
                                 <t t-esc="orderline.get_product().display_name"/>
                                 <t t-if="orderline.get_discount() > 0">
                                     <div class="pos-disc-font">
-                                        With a <t t-esc="orderline.get_discount()"/>% discount
+                                        Con un descuento de <t t-esc="orderline.get_discount()"/>% 
                                     </div>
                                 </t>
                                 <div class="linea_extras">
@@ -156,9 +88,7 @@
                                     </t>
                                 </div>
                             </td>
-                            <td class="pos-right-align">
-                                <t t-esc="orderline.get_quantity_str_with_unit()"/>
-                            </td>
+                            
                             <td class="pos-right-align">
                                 <t t-esc="widget.format_currency(orderline.get_display_price())"/>
                             </td>
@@ -167,8 +97,8 @@
                     <br/>
                     <table class='receipt-total'>
                         <colgroup>
-                            <col width='40%' />
-                            <col width='40%' />
+                            <col width='10%' />
+                            <col width='20%' />
                         </colgroup>
                         <tr class="emph">
                             <td>Total:</td>
@@ -181,8 +111,8 @@
                     <table class='receipt-paymentlines'>
                         <t t-foreach="paymentlines" t-as="line">
                             <colgroup>
-                                <col width='40%' />
-                                <col width='40%' />
+                                <col width='10%' />
+                                <col width='20%' />
                             </colgroup>
                             <tr>
                                 <td>
@@ -207,31 +137,39 @@
                             </td>
                         </tr>
                     </table>
+                    <br/><br/>
                     <t t-if="!certificador_fel">
-                        Certificador<br/>
-                        INFILE, S.A.<br/>
-                        NIT: 12521337<br/>
+                    	<div class="pos-center-align">
+                        Sujeto a pagos trimestrales ISR<br/>
+                        Certificador: MEGAPRINT, S.A.<br/>
+                        NIT: 50510231<br/>
+                    	</div>
                     </t>
                     <t t-if="certificador_fel == 'g4s'">
+                        Sujeto a pagos trimestrales ISR<br/>
                         Certificador<br/>
                         G4S DOCUMENTA, S. A.<br/>
                         NIT: 60010207<br/>
                     </t>
                     <t t-if="certificador_fel == 'gom'">
+                        Sujeto a pagos trimestrales ISR<br/>
                         Certificador<br/>
                         GOM SOLUTIONS, SOCIEDAD ANONIMA<br/>
                         NIT: 95189416<br/>
                     </t>
-                    <t t-if="certificador_fel == 'ecofactura'">
-                        Certificador<br/>
-                        ECO-FACTURAS<br/>
-                        NIT: 64281167<br/>
-                    </t>
+                    <div class="pos-center-align">
                     <t t-if="firma_fel">
-                        Autorización: <t t-esc="firma_fel || ''"/><br/>
-                        Fecha Certificación: <t t-esc="order.formatted_validation_date"/>
+                    	
+                    	<br/>
+                        Autorización: <br/>
+                        <t t-esc="firma_fel || ''"/><br/>
+                        Fecha Certificación: <br/>
+                        <t t-esc="order.formatted_validation_date"/>
+                    	
                     </t>
-                    <t t-esc="order.name"/><br/>
+                    <!--<t t-esc="order.name"/>--><br/>
+                    GRACIAS POR SU COMPRA!
+                    </div>
                     <t t-if="receipt.footer">
                         <br/>
                         <div style='text-align:center'>
@@ -243,6 +181,5 @@
             </div>
         </t>
     </t>
-    -->
 
 </templates>
